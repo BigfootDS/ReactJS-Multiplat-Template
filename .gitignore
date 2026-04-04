@@ -28,3 +28,4 @@ resources/android/**/*
 base64.txt
 ./android/release-keystore
 android/release-keystore
+.env

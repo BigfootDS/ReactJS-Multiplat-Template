@@ -7,13 +7,25 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "android:studio": "npx cap open android",
+    "android:compile": "npm run build && npx cap sync",
+    "android:prepare:assets": "npx capacitor-assets generate --iconBackgroundColor \"#000000\"",
+    "android:prepare": "npm run android:prepare:assets && npm run android:compile",
+    "android:run": "npm run android:prepare && npx cap run android",
+    "android:build": "npm run android:prepare && npx cap build android"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.0",
     "@capacitor/core": "^8.3.0",
+    "@capgo/capacitor-env": "^8.1.18",
+    "bowser": "^2.14.1",
+    "my-ua-parser": "^2.0.4",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-device-detect": "^2.2.3",
+    "react-dom": "^19.2.4",
+    "react-router": "^7.14.0",
+    "react-use": "^17.6.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
