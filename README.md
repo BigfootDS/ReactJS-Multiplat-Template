@@ -11,6 +11,16 @@ This template uses Ionic Capacitor to get to other platforms;
 - Ubuntu (Ionic Capacitor, ElectronJS)
 - MacOS (Ionic Capacitor, ElectronJS)
 
+```mermaid
+flowchart TD
+    A[React app] -->|Compile to `dist` folder| C{Static website}
+    C -->|Capacitor + React| D[Android app]
+    C -->|Capacitor + React| E[iOS App]
+    C -->|Electron + React| F[Windows App]
+    C -->|Electron + React| G[MacOS App]
+    C -->|Electron + React| H[Linux App]
+```
+
 ## First-Time Setup Steps
 
 For when you make a brand-new project (NOT just cloning this repo, but making a new repo!):
