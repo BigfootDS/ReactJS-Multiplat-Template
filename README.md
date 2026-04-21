@@ -2,14 +2,14 @@
 
 A template for a ReactJS front-end app built with TypeScript and Vite.
 
-This template uses Ionic Capacitor to get to other platforms;
+This template uses Ionic Capacitor and ElectronJS to get to other platforms;
 
 - Web (Ionic Capacitor)
 - iOS (Ionic Capacitor, Xcode)
 - Android (Ionic Capacitor, Android Studio)
-- Windows (Ionic Capacitor, ElectronJS)
-- Ubuntu (Ionic Capacitor, ElectronJS)
-- MacOS (Ionic Capacitor, ElectronJS)
+- Windows (ElectronJS)
+- Ubuntu (ElectronJS)
+- MacOS (ElectronJS)
 
 ```mermaid
 flowchart TD
