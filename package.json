@@ -24,12 +24,12 @@
     "electron:build:macos:mas": "echo Not Yet Implemented! Need more config for command: electron-builder --mac mas",
 
 
-    "android:studio": "npx cap open android",
-    "android:compile": "npm run react:build && npx cap sync",
-    "android:prepare:assets": "npx capacitor-assets generate --iconBackgroundColor \"#000000\"",
-    "android:prepare": "npm run android:prepare:assets && npm run android:compile",
-    "android:run": "npm run android:prepare && npx cap run android",
-    "android:build": "npm run android:prepare && npx cap build android"
+    "capacitor:android:studio": "npx cap open android",
+    "capacitor:android:compile": "npm run react:build && npx cap sync",
+    "capacitor:android:prepare:assets": "npx capacitor-assets generate --iconBackgroundColor \"#000000\"",
+    "capacitor:android:prepare": "npm run capacitor:android:prepare:assets && npm run capacitor:android:compile",
+    "capacitor:android:run": "npm run capacitor:android:prepare && npx cap run android",
+    "capacitor:android:build": "npm run capacitor:android:prepare && npx cap build android"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",

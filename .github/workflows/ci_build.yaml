@@ -69,7 +69,7 @@ jobs:
 
       # Refresh Android project icons & other visual assets
       - name: Android icon/splash/etc asset refresh
-        run: npm run android:prepare:assets
+        run: npm run capacitor:android:prepare:assets
 
       # Sync the ReactJS app build into the Android project
       - name: React->Android Sync 
