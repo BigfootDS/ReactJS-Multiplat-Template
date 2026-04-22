@@ -21,6 +21,24 @@ flowchart TD
     C -->|Electron + React| H[Linux App]
 ```
 
+## TODO
+
+This isn't fully-ready for use as a template yet, but it's public so you can learn from what I've been building so far and make your own progress for your own projects.
+
+Major things to do: 
+
+- Confirm build configuration and outputs for some key platforms:
+  - [ ] iOS (whatever file format is meant for them)
+  - [ ] MacOS (dmg)
+  - [ ] Linux (deb)
+- Use this in a separate project for dogfooding to confirm how some more-complex React packages will work
+  - [ ] React Router 
+  - [ ] Any localstorage and indexDB solutions to avoid mobile localstorage cache auto-deleting problems
+  - [ ] How/if the Capacitor plugins would work in Electron builds, and if we need to do code splitting or just limit plugin usage
+- More CI/CD
+  - [ ] Automatic GitHub repository releases with file attachments
+  - [ ] Automatic publishing of releases through to app stores
+
 ## General Workflow Steps
 
 For people working in this repo after it's already been created:
@@ -29,8 +47,7 @@ For people working in this repo after it's already been created:
   - Avoid Capacitor- or Electron-specific solutions or implementations of features. Keep the ReactJS codebase agnostic to either framework!
 3. Preview your ReactJS app in a web browser: `npm run dev`
 3. Sync the ReactJS app into the Capacitor Android project, and run the Android project: `npm run android:run`
-4. Build the Android app when ready to make an installable file: `npm run android:build`
-5. 
+4. Use platform-specific build commands when ready to make an installable file, such as `npm run android:build` or `npm run electron:build:windows:portable`
 
 
 
