@@ -140,7 +140,7 @@ jobs:
       - name: Confirming that the build output exists in the expected place
         run: |
           echo TODO!
-          ls -IR release/
+          ls -R release/
 
       # Upload signed release as artifact
       # - name: Upload release bundle 
@@ -160,7 +160,7 @@ jobs:
       # Fix for Wine permissions in GitHub Actions job runner environments
       - name: Preserve $HOME set in the container
         run: echo HOME=/root >> "$GITHUB_ENV"
-        
+
       # Clone the repo into the action runner 
       - uses: actions/checkout@v6
 
@@ -185,7 +185,7 @@ jobs:
       - name: Confirming that the build output exists in the expected place
         run: | 
           echo TODO!
-          ls -IR release/
+          ls -R release/
 
       # Upload signed release as artifact
       # - name: Upload release bundle 
