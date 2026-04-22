@@ -1,0 +1,267 @@
+name: CI - Build 
+
+on:
+  push: 
+    branches:
+      - "main"
+
+# It'll be tempting to use GitHub Actions matrix strategies to make jobs per OS/output file format,
+# but don't. 
+# Different output formats and file names and so on - gotta be handled with care, manually.
+# Lots of jobs to run here!
+jobs:
+
+  # This job is purely for sanity-checking/testing.
+  # If the build fails here, no point attempting to make platform installers. 
+  build-react:
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # Could maybe even run a test suite here, lol
+      # - name: Test the ReactJS app 
+      #   run: npm run react:test
+
+      # Build the project
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      
+
+  build-android:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # Set up the Android workspace
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.2.0
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: 'gradle'
+
+      # If this were any other tech stack, we would grab the built React "dist" folder
+      # from the GitHub workflow artifact system
+      # But Vite is so darn quick with React, we may as well just build again
+      # and reduce complexity in the workflow code
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      # Refresh Android project icons & other visual assets
+      - name: Android icon/splash/etc asset refresh
+        run: npm run android:prepare:assets
+
+      # Sync the ReactJS app build into the Android project
+      - name: React->Android Sync 
+        run: npx cap sync 
+
+      # Build the Android app bundle (.AAB file)
+      - name: Confirm permissions on the Android build file
+        run: chmod +x ./android/gradlew
+      - name: Build the AAB file
+        run: cd android && ./gradlew bundle
+
+      # Get Android app signing keys involved 
+      - name: Pull signing key from org secrets 
+        run: |
+          echo "${{secrets.GOOGLEPLAY_SIGNINGKEYBASE64}}" > android/release.jks.base64
+          base64 -d android/release.jks.base64 > android/release.decrypted.jks
+      # - name: Sign the built bundle 
+      #   run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.GOOGLEPLAY_KEYSTOREPASS }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
+      - name: Sign the built Android app bundle 
+        uses: ilharp/sign-android-release@v2
+        id: sign_app
+        with:
+          releaseDir: ./android/app/build/outputs/bundle/release/
+          signingKey: ${{ secrets.GOOGLEPLAY_SIGNINGKEYBASE64}}
+          keyAlias: ${{ secrets.GOOGLEPLAY_KEYALIAS }}
+          keyStorePassword: ${{ secrets.GOOGLEPLAY_KEYSTOREPASS }}
+          keyPassword: ${{ secrets.GOOGLEPLAY_KEYSTOREKEYPASS }}
+          buildToolsVersion: 36.0.0
+
+      # Upload signed release as artifact
+      - name: Upload release bundle 
+        uses: actions/upload-artifact@v7
+        with:
+          name: app-release
+          path: ${{ steps.sign_app.outputs.signedFile }}
+          retention-days: 30
+
+  build-windows-installer:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # If this were any other tech stack, we would grab the built React "dist" folder
+      # from the GitHub workflow artifact system
+      # But Vite is so darn quick with React, we may as well just build again
+      # and reduce complexity in the workflow code
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      - name: Build the Windows installer 
+        run: npm run electron:build:windows:installer
+
+      - name: Confirming that the build output exists in the expected place
+        run: |
+          echo TODO!
+          ls -IR release/
+
+      # Upload signed release as artifact
+      # - name: Upload release bundle 
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: app-release
+      #     # Path needs updating based on the previous step in this job.
+      #     path: ${{ steps.sign_app.outputs.signedFile }}
+      #     retention-days: 30
+
+  build-windows-portable:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # If this were any other tech stack, we would grab the built React "dist" folder
+      # from the GitHub workflow artifact system
+      # But Vite is so darn quick with React, we may as well just build again
+      # and reduce complexity in the workflow code
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      - name: Build the Windows installer 
+        run: npm run electron:build:windows:portable
+
+      - name: Confirming that the build output exists in the expected place
+        run: | 
+          echo TODO!
+          ls -IR release/
+
+      # Upload signed release as artifact
+      # - name: Upload release bundle 
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: app-release
+      #     # Path needs updating based on the previous step in this job.
+      #     path: ${{ steps.sign_app.outputs.signedFile }}
+      #     retention-days: 30
+
+  build-linux-deb:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # If this were any other tech stack, we would grab the built React "dist" folder
+      # from the GitHub workflow artifact system
+      # But Vite is so darn quick with React, we may as well just build again
+      # and reduce complexity in the workflow code
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      - name: Build the Windows installer 
+        run: npm run electron:build:linux:deb
+
+      - name: Confirming that the build output exists in the expected place
+        run: | 
+          echo TODO!
+          ls -IR release/
+
+      # Upload signed release as artifact
+      # - name: Upload release bundle 
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: app-release
+      #     # Path needs updating based on the previous step in this job.
+      #     path: ${{ steps.sign_app.outputs.signedFile }}
+      #     retention-days: 30
+
+  build-macos-dmg:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
+
+      # Set up the NodeJS project workspace
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      # Set up the ReactJS app dependencies
+      - run: npm install
+
+      # If this were any other tech stack, we would grab the built React "dist" folder
+      # from the GitHub workflow artifact system
+      # But Vite is so darn quick with React, we may as well just build again
+      # and reduce complexity in the workflow code
+      - name: Build the ReactJS app
+        run: npm run react:build
+
+      - name: Build the Windows installer 
+        run: npm run electron:build:macos:dmg
+
+      - name: Confirming that the build output exists in the expected place
+        run: | 
+          echo TODO!
+          ls -IR release/
+
+      # Upload signed release as artifact
+      # - name: Upload release bundle 
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: app-release
+      #     # Path needs updating based on the previous step in this job.
+      #     path: ${{ steps.sign_app.outputs.signedFile }}
+      #     retention-days: 30
+
+  # Trigger some other workflow or job once all the build jobs above are finished
+  # e.g. attach all builds to a release, or push some builds to app stores, or both, blah blah blah

@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.bigfootds.projectid"
+    namespace = "com.bigfootds.reactjsmultiplattemplate"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.bigfootds.projectid"
+        applicationId "com.bigfootds.reactjsmultiplattemplate"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

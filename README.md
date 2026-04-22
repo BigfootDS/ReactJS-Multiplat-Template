@@ -2,14 +2,14 @@
 
 A template for a ReactJS front-end app built with TypeScript and Vite.
 
-This template uses Ionic Capacitor to get to other platforms;
+This template uses Ionic Capacitor and ElectronJS to get to other platforms;
 
 - Web (Ionic Capacitor)
 - iOS (Ionic Capacitor, Xcode)
 - Android (Ionic Capacitor, Android Studio)
-- Windows (Ionic Capacitor, ElectronJS)
-- Ubuntu (Ionic Capacitor, ElectronJS)
-- MacOS (Ionic Capacitor, ElectronJS)
+- Windows (ElectronJS)
+- Ubuntu (ElectronJS)
+- MacOS (ElectronJS)
 
 ```mermaid
 flowchart TD
@@ -21,16 +21,32 @@ flowchart TD
     C -->|Electron + React| H[Linux App]
 ```
 
-## First-Time Setup Steps
+## General Workflow Steps
+
+For people working in this repo after it's already been created:
+
+1. Do your ReactJS work.
+  - Avoid Capacitor- or Electron-specific solutions or implementations of features. Keep the ReactJS codebase agnostic to either framework!
+3. Preview your ReactJS app in a web browser: `npm run dev`
+3. Sync the ReactJS app into the Capacitor Android project, and run the Android project: `npm run android:run`
+4. Build the Android app when ready to make an installable file: `npm run android:build`
+5. 
+
+
+
+
+## First-Time Project Creation Setup Steps
 
 For when you make a brand-new project (NOT just cloning this repo, but making a new repo!):
 
-1. Create the React + Vite app: `npm create vite@latest .`
+1. Create the React + Vite app and choose the "Other\Electron" template: `npm create vite@latest .`
 2. Install its dependencies if you didn't from the previous step: `npm install`
+3. Check the Electron-Builder version - if it still has an issue running `npm run build` on Windows, the workaround is here: https://github.com/electron-userland/electron-builder/issues/8149#issuecomment-3967495687 
 3. Add Capacitor to the project: `npm install @capacitor/core`
 4. Add the Capacitor CLI to the project: `npm install --save-dev @capacitor/cli`
 5. Initialise Capacitor: `npx cap init`
 6. Build the ReactJS app: `npm run build`
+7. Add Android to the Capacitor project: `npm install @capacitor/android`
 7. Initialise the Android project: `npx cap add android`
 8. Initialise an app logo/asset generator per the documentation here: https://capacitorjs.com/docs/guides/splash-screens-and-icons 
 9. Add the `capacitor-env` package to the project by running `npm install @capgo/capacitor-env && npx cap sync` - no `dotenv`, no `node:process`, just that package.
@@ -75,13 +91,43 @@ export default config;
 18. Add this library to get more handy ReactJS hooks: `npm install react-use && npx cap sync`
 
 
-## General Workflow Steps
+## GitHub Actions Setup Steps
 
-For people working in this repo after it's already been created:
+TODO: Stuff about the repo secrets for Google Play signing keys & keystore-as-env stuff, and anything similar for other platforms.
 
-1. Do your ReactJS work.
-  - Avoid Capacitor- or Electron-specific solutions or implementations of features. Keep the ReactJS codebase agnostic to either framework!
-3. Preview your ReactJS app in a web browser: `npm run dev`
-3. Sync the ReactJS app into the Capacitor Android project, and run the Android project: `npm run android:run`
-4. Build the Android app when ready to make an installable file: `npm run android:build`
-5. 
+
+
+# Electron-Vite Template Readme
+
+Below is the original Electron-Vite template's readme contents, in case we still need that for anything.
+
+## React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+### Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+
+- Configure the top-level `parserOptions` property like this:
+
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

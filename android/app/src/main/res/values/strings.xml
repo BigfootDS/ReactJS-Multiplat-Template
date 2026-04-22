@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">BIGFOOTDS PROJECT NAME</string>
-    <string name="title_activity_main">BIGFOOTDS PROJECT NAME</string>
-    <string name="package_name">com.bigfootds.projectid</string>
-    <string name="custom_url_scheme">com.bigfootds.projectid</string>
+    <string name="app_name">reactjs-multiplat-template</string>
+    <string name="title_activity_main">reactjs-multiplat-template</string>
+    <string name="package_name">com.bigfootds.reactjsmultiplattemplate</string>
+    <string name="custom_url_scheme">com.bigfootds.reactjsmultiplattemplate</string>
 </resources>
