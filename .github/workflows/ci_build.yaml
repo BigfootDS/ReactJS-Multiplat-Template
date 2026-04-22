@@ -112,12 +112,12 @@ jobs:
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
-      # Clone the repo into the action runner 
-      - uses: actions/checkout@v6
-
       # Fix for Wine permissions in GitHub Actions job runner environments
       - name: Preserve $HOME set in the container
         run: echo HOME=/root >> "$GITHUB_ENV"
+
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
 
       # Set up the NodeJS project workspace
       - uses: actions/setup-node@v6
@@ -156,12 +156,13 @@ jobs:
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
-      # Clone the repo into the action runner 
-      - uses: actions/checkout@v6
 
       # Fix for Wine permissions in GitHub Actions job runner environments
       - name: Preserve $HOME set in the container
         run: echo HOME=/root >> "$GITHUB_ENV"
+        
+      # Clone the repo into the action runner 
+      - uses: actions/checkout@v6
 
       # Set up the NodeJS project workspace
       - uses: actions/setup-node@v6
