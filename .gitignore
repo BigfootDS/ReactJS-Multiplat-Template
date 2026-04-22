@@ -23,9 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-resources/android/**/*
+release/
 
-base64.txt
-./android/release-keystore
-android/release-keystore
 .env
