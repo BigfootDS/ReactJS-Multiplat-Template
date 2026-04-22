@@ -115,6 +115,10 @@ jobs:
       # Clone the repo into the action runner 
       - uses: actions/checkout@v6
 
+      # Fix for Wine permissions in GitHub Actions job runner environments
+      - name: Preserve $HOME set in the container
+        run: echo HOME=/root >> "$GITHUB_ENV"
+
       # Set up the NodeJS project workspace
       - uses: actions/setup-node@v6
         with:
@@ -154,6 +158,10 @@ jobs:
     steps:
       # Clone the repo into the action runner 
       - uses: actions/checkout@v6
+
+      # Fix for Wine permissions in GitHub Actions job runner environments
+      - name: Preserve $HOME set in the container
+        run: echo HOME=/root >> "$GITHUB_ENV"
 
       # Set up the NodeJS project workspace
       - uses: actions/setup-node@v6
