@@ -110,6 +110,7 @@ jobs:
   build-windows-installer:
     needs: [build-react]
     runs-on: ubuntu-latest
+    container: electronuserland/builder:wine
     steps:
       # Clone the repo into the action runner 
       - uses: actions/checkout@v6
@@ -149,6 +150,7 @@ jobs:
   build-windows-portable:
     needs: [build-react]
     runs-on: ubuntu-latest
+    container: electronuserland/builder:wine
     steps:
       # Clone the repo into the action runner 
       - uses: actions/checkout@v6
