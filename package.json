@@ -10,8 +10,8 @@
     "react:preview": "vite preview",
     "react:test":"echo No testing implemented yet, but use Vitest when we start doing that! Vite + Vitest = good times!",
 
-    "electron:build:windows:installer": "electron-builder --win nsis",
-    "electron:build:windows:portable": "electron-builder --win portable",
+    "electron:build:windows:installer": "electron-builder --win nsis --publish never",
+    "electron:build:windows:portable": "electron-builder --win portable --publish never",
     "electron:build:linux:deb": "echo Not Yet Implemented! Need more config for command: electron-builder --linux deb",
     "electron:build:linux:snap": "echo Not Yet Implemented! Need more config for command: electron-builder --linux snap",
     "electron:build:linux:appimage": "echo Not Yet Implemented! Need more config for command: electron-builder --linux AppImage",

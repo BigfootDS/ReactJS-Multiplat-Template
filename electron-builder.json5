@@ -12,14 +12,12 @@
     "dist-electron"
   ],
   "mac": {
-    "publish":"never",
     "target": [
       "dmg"
     ],
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
   },
   "win": {
-    "publish":"never",
     "target": [
       {
         "target": "nsis",
@@ -44,7 +42,6 @@
     "artifactName": "${productName}-Windows-${version}-Portable.${ext}"
   },
   "linux": {
-    "publish":"never",
     "target": [
       "AppImage"
     ],
