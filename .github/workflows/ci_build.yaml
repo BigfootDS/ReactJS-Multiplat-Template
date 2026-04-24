@@ -138,8 +138,9 @@ jobs:
         run: npm run electron:build:windows:installer
 
       - name: Confirming that the build output exists in the expected place
+        id: output_finder
         run: |
-          find . -name '*-Setup.exe'
+          echo "file_path=$(find . -name '\./*-Setup.exe)' >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -148,7 +149,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            find . -name '*-Setup.exe'
+            ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
 
   build-windows-portable:
@@ -183,8 +184,9 @@ jobs:
         run: npm run electron:build:windows:portable
 
       - name: Confirming that the build output exists in the expected place
+        id: output_finder
         run: |
-          find . -name '*-Portable.exe'
+          echo "file_path=$(find . -name '\./*-Portable.exe)' >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -193,7 +195,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            find . -name '*-Portable.exe'
+            ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
 
   build-linux-deb:
@@ -222,8 +224,9 @@ jobs:
         run: npm run electron:build:linux:deb
 
       - name: Confirming that the build output exists in the expected place
+        id: output_finder
         run: |
-          find . -name '*.deb'
+          echo "file_path=$(find . -name '\./*.deb)' >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -232,7 +235,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            find . -name '*.deb'
+            ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
 
   build-macos-dmg:
