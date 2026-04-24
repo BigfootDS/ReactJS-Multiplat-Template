@@ -244,7 +244,7 @@ jobs:
         run: |
           echo "file_path=$(find . -name '*.deb')" >> "$GITHUB_OUTPUT"
           echo "file_name=$(basename "${file_path}")" >> "$GITHUB_OUTPUT"
-          echo "$GITHUB_OUTPUT"
+          echo $GITHUB_OUTPUT
 
       # Upload signed release as artifact
       - name: Upload release bundle 
