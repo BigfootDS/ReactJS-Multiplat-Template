@@ -43,8 +43,18 @@
   },
   "linux": {
     "target": [
-      "AppImage"
-    ],
+      {
+        target: "AppImage"
+      },
+      {
+        target: "deb"
+      }
+    ]
+  },
+  "deb": {
+    "artifactName": "${productName}-Linux-${version}.${ext}"
+  }, 
+  "appImage":{
     "artifactName": "${productName}-Linux-${version}.${ext}"
   }
 }
