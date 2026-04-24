@@ -118,7 +118,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: basename ${{ steps.release_rename.outputs.renamed_output }}
+          name: $(basename ${{ steps.release_rename.outputs.renamed_output }})
           path: ${{ steps.release_rename.outputs.renamed_output }}
           retention-days: 30
 
@@ -161,7 +161,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: basename ${{ steps.output_finder.outputs.file_path }}
+          name: $(basename ${{ steps.output_finder.outputs.file_path }})
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -206,7 +206,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: basename ${{ steps.output_finder.outputs.file_path }}
+          name: $(basename ${{ steps.output_finder.outputs.file_path }})
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -245,7 +245,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: basename ${{ steps.output_finder.outputs.file_path }}
+          name: $(basename ${{ steps.output_finder.outputs.file_path }})
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -285,7 +285,7 @@ jobs:
       # - name: Upload release bundle 
       #   uses: actions/upload-artifact@v7
       #   with:
-      #     name: basename ${{ steps.output_finder.outputs.file_path }}
+      #     name: $(basename ${{ steps.output_finder.outputs.file_path }})
       #     path: |
       #       ${{ steps.output_finder.outputs.file_path }}
       #     retention-days: 30
