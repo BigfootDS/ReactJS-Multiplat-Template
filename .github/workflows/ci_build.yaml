@@ -223,9 +223,7 @@ jobs:
 
       - name: Confirming that the build output exists in the expected place
         run: | 
-          echo TODO!
-          
-        # ls -IR release/
+          ls -IR release/
 
       # Upload signed release as artifact
       # - name: Upload release bundle 

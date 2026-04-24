@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author":{
+    "email": "contact@bigfootds.com",
+    "url": "https://bigfootds.com",
+    "name": "BigfootDS"
+  },
+  "description": "Template for a ReactJS app configured to run on Android, iOS, and multiple desktop operating systems.",
   "scripts": {
     "react:dev": "vite",
     "react:build": "tsc && vite build",
@@ -12,7 +18,7 @@
 
     "electron:build:windows:installer": "electron-builder --win nsis --publish never",
     "electron:build:windows:portable": "electron-builder --win portable --publish never",
-    "electron:build:linux:deb": "echo Not Yet Implemented! Need more config for command: electron-builder --linux deb",
+    "electron:build:linux:deb": "electron-builder --linux deb",
     "electron:build:linux:snap": "echo Not Yet Implemented! Need more config for command: electron-builder --linux snap",
     "electron:build:linux:appimage": "echo Not Yet Implemented! Need more config for command: electron-builder --linux AppImage",
     "electron:build:linux:rpm": "echo Not Yet Implemented! Need more config for command: electron-builder --linux rpm",

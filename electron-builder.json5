@@ -43,7 +43,12 @@
   },
   "linux": {
     "target": [
-      "AppImage"
+      {
+        target: "AppImage"
+      },
+      {
+        target: "deb"
+      }
     ],
     "artifactName": "${productName}-Linux-${version}.${ext}"
   }
