@@ -139,7 +139,7 @@ jobs:
 
       - name: Confirming that the build output exists in the expected place
         run: |
-          find / -regex '^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$'
+          find . -name '*-Setup.exe'
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -148,7 +148,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            ^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$
+            find . -name '*-Setup.exe'
           retention-days: 30
 
   build-windows-portable:
@@ -179,12 +179,12 @@ jobs:
       - name: Build the ReactJS app
         run: npm run react:build
 
-      - name: Build the Windows installer 
+      - name: Build the Windows portable executable 
         run: npm run electron:build:windows:portable
 
       - name: Confirming that the build output exists in the expected place
         run: |
-          find / -regex '^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$'
+          find . -name '*-Portable.exe'
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -193,7 +193,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            ^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$
+            find . -name '*-Portable.exe'
           retention-days: 30
 
   build-linux-deb:
@@ -218,12 +218,12 @@ jobs:
       - name: Build the ReactJS app
         run: npm run react:build
 
-      - name: Build the Windows installer 
+      - name: Build the DEB installer 
         run: npm run electron:build:linux:deb
 
       - name: Confirming that the build output exists in the expected place
         run: |
-          find / -regex '^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$'
+          find . -name '*.deb'
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -232,7 +232,7 @@ jobs:
           name: app-release
           # Path needs updating based on the previous step in this job.
           path: |
-            ^release\/\d+\.\d+\.\d+\/YourAppName-(Windows|Linux|MacOS)-\d+\.\d+\.\d+(?:-Setup\.exe|-Portable\.exe|\.AppImage|\.deb)$
+            find . -name '*.deb'
           retention-days: 30
 
   build-macos-dmg:
