@@ -156,12 +156,13 @@ jobs:
         id: output_finder
         run: |
           echo "file_path=$(find . -name '*-Setup.exe')" >> "$GITHUB_OUTPUT"
+          echo "file_name=$(basename "${file_path}")" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: $(basename ${{ steps.output_finder.outputs.file_path }})
+          name: $(basename ${{ steps.output_finder.outputs.file_name }})
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -201,12 +202,13 @@ jobs:
         id: output_finder
         run: |
           echo "file_path=$(find . -name '*-Portable.exe')" >> "$GITHUB_OUTPUT"
+          echo "file_name=$(basename "${file_path}")" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: $(basename ${{ steps.output_finder.outputs.file_path }})
+          name: ${{ steps.output_finder.outputs.file_name }}
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -240,12 +242,13 @@ jobs:
         id: output_finder
         run: |
           echo "file_path=$(find . -name '*.deb')" >> "$GITHUB_OUTPUT"
+          echo "file_name=$(basename "${file_path}")" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: $(basename ${{ steps.output_finder.outputs.file_path }})
+          name: ${{ steps.output_finder.outputs.file_name }}
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -285,7 +288,7 @@ jobs:
       # - name: Upload release bundle 
       #   uses: actions/upload-artifact@v7
       #   with:
-      #     name: $(basename ${{ steps.output_finder.outputs.file_path }})
+      #     name: ${{ steps.output_finder.outputs.file_name }}
       #     path: |
       #       ${{ steps.output_finder.outputs.file_path }}
       #     retention-days: 30
