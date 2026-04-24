@@ -113,12 +113,13 @@ jobs:
         run: |
           mv ${{ steps.sign_app.outputs.signedFile }} ./YourAppName.aab
           echo "renamed_output=./YourAppName.aab" >> "$GITHUB_OUTPUT"
+          echo "file_name=$(basename "${renamed_output}")" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: $(basename ${{ steps.release_rename.outputs.renamed_output }})
+          name: ${{ steps.release_rename.outputs.file_name }}
           path: ${{ steps.release_rename.outputs.renamed_output }}
           retention-days: 30
 
@@ -243,6 +244,7 @@ jobs:
         run: |
           echo "file_path=$(find . -name '*.deb')" >> "$GITHUB_OUTPUT"
           echo "file_name=$(basename "${file_path}")" >> "$GITHUB_OUTPUT"
+          echo "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
