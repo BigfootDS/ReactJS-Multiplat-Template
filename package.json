@@ -20,7 +20,7 @@
     "electron:build:windows:portable": "electron-builder --win portable --publish never",
     "electron:build:linux:deb": "electron-builder --linux deb",
     "electron:build:linux:snap": "echo Not Yet Implemented! Need more config for command: electron-builder --linux snap",
-    "electron:build:linux:appimage": "echo Not Yet Implemented! Need more config for command: electron-builder --linux AppImage",
+    "electron:build:linux:appimage": "electron-builder --linux AppImage",
     "electron:build:linux:rpm": "echo Not Yet Implemented! Need more config for command: electron-builder --linux rpm",
     "electron:build:linux:flatpak": "echo Not Yet Implemented! Need more config for command: electron-builder --linux flatpak",
     "electron:build:linux:pacman": "echo Not Yet Implemented! Need more config for command: electron-builder --linux pacman",
