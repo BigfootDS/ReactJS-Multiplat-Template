@@ -81,6 +81,10 @@ jobs:
       - name: Build the AAB file
         run: cd android && ./gradlew bundle
 
+      # Confirm what type of build outputs we got by recursively logging through the big output mess
+      - name: Log build output files
+        run: ls -R ./android/app/build/outputs/
+
       # Get Android app signing keys involved 
       - name: Pull signing key from org secrets 
         run: |
@@ -146,7 +150,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: app-release
+          name: ${{ steps.output_finder.outputs.file_path }}
           # Path needs updating based on the previous step in this job.
           path: |
             ${{ steps.output_finder.outputs.file_path }}
