@@ -103,12 +103,23 @@ jobs:
           keyPassword: ${{ secrets.GOOGLEPLAY_KEYSTOREKEYPASS }}
           buildToolsVersion: 36.0.0
 
+      # Rename the signed output file so it has the app name in it
+      # It's not a huge deal - users shouldn't be grabbing AAB file directly,
+      # they get used by Google Play Store to become what users download,
+      # but it's always sad to see "app-release-signed.aab" in 
+      # the artifact ZIPs when troubleshooting this stuff.
+      - name: Rename the signed release output file
+        id: release_rename
+        run: |
+          mv ${{ steps.sign_app.outputs.signedFile }} ./YourAppName.aab
+          echo "renamed_output=./YourAppName.aab" >> "$GITHUB_OUTPUT"
+
       # Upload signed release as artifact
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: app-release
-          path: ${{ steps.sign_app.outputs.signedFile }}
+          name: basename ${{ steps.release_rename.outputs.renamed_output }}
+          path: ${{ steps.release_rename.outputs.renamed_output }}
           retention-days: 30
 
   build-windows-installer:
@@ -150,8 +161,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ steps.output_finder.outputs.file_path }}
-          # Path needs updating based on the previous step in this job.
+          name: basename ${{ steps.output_finder.outputs.file_path }}
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -196,8 +206,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: app-release
-          # Path needs updating based on the previous step in this job.
+          name: basename ${{ steps.output_finder.outputs.file_path }}
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -236,8 +245,7 @@ jobs:
       - name: Upload release bundle 
         uses: actions/upload-artifact@v7
         with:
-          name: app-release
-          # Path needs updating based on the previous step in this job.
+          name: basename ${{ steps.output_finder.outputs.file_path }}
           path: |
             ${{ steps.output_finder.outputs.file_path }}
           retention-days: 30
@@ -277,9 +285,9 @@ jobs:
       # - name: Upload release bundle 
       #   uses: actions/upload-artifact@v7
       #   with:
-      #     name: app-release
-      #     # Path needs updating based on the previous step in this job.
-      #     path: ${{ steps.sign_app.outputs.signedFile }}
+      #     name: basename ${{ steps.output_finder.outputs.file_path }}
+      #     path: |
+      #       ${{ steps.output_finder.outputs.file_path }}
       #     retention-days: 30
 
   # Trigger some other workflow or job once all the build jobs above are finished
