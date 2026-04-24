@@ -140,7 +140,7 @@ jobs:
       - name: Confirming that the build output exists in the expected place
         id: output_finder
         run: |
-          echo "file_path=$(find . -name '\./*-Setup.exe)' >> "$GITHUB_OUTPUT"
+          echo "file_path=$(find . -name '\./*-Setup.exe')" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -186,7 +186,7 @@ jobs:
       - name: Confirming that the build output exists in the expected place
         id: output_finder
         run: |
-          echo "file_path=$(find . -name '\./*-Portable.exe)' >> "$GITHUB_OUTPUT"
+          echo "file_path=$(find . -name '\./*-Portable.exe')" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
@@ -226,7 +226,7 @@ jobs:
       - name: Confirming that the build output exists in the expected place
         id: output_finder
         run: |
-          echo "file_path=$(find . -name '\./*.deb)' >> "$GITHUB_OUTPUT"
+          echo "file_path=$(find . -name '\./*.deb')" >> "$GITHUB_OUTPUT"
 
       # Upload signed release as artifact
       - name: Upload release bundle 
