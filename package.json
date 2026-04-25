@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "author":{
+  "author": {
     "email": "contact@bigfootds.com",
     "url": "https://bigfootds.com",
     "name": "BigfootDS"
@@ -14,8 +14,7 @@
     "react:build": "tsc && vite build",
     "react:lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "react:preview": "vite preview",
-    "react:test":"echo No testing implemented yet, but use Vitest when we start doing that! Vite + Vitest = good times!",
-
+    "react:test": "echo No testing implemented yet, but use Vitest when we start doing that! Vite + Vitest = good times!",
     "electron:build:windows:installer": "electron-builder --win nsis --publish never",
     "electron:build:windows:portable": "electron-builder --win portable --publish never",
     "electron:build:linux:deb": "electron-builder --linux deb --publish never",
@@ -28,8 +27,6 @@
     "electron:build:macos:dmg": "echo Not Yet Implemented! Need more config for command: electron-builder --mac dmg --publish never",
     "electron:build:macos:pkg": "echo Not Yet Implemented! Need more config for command: electron-builder --mac pkg --publish never",
     "electron:build:macos:mas": "echo Not Yet Implemented! Need more config for command: electron-builder --mac mas --publish never",
-
-
     "capacitor:android:studio": "npx cap open android",
     "capacitor:android:compile": "npm run react:build && npx cap sync",
     "capacitor:android:prepare:assets": "npx capacitor-assets generate --iconBackgroundColor \"#000000\"",
@@ -54,6 +51,7 @@
     "@capacitor/cli": "^8.3.1",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
+    "@types/wicg-file-system-access": "^2023.10.7",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vitejs/plugin-react": "^4.2.1",
