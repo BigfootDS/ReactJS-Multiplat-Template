@@ -4,6 +4,9 @@ import { app, BrowserWindow } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
+import { installExtension } from 'electron-devtools-installer';
+
+
 // Line below is commented out per https://github.com/electron-vite/create-electron-vite/issues/56
 // const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -42,7 +45,9 @@ function createWindow() {
   })
 
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL)
+    win.loadURL(VITE_DEV_SERVER_URL, {
+      extraHeaders: "Cross-Origin-Embedder-Policy: require-corp\nCross-Origin-Opener-Policy: same-origin"
+    })
   } else {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
@@ -67,4 +72,12 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(async () => {
+  console.log("Electron app booting up...");
+  await installExtension([
+    "acndjpgkpaclldomagafnognkcgjignd", // OPFS Explorer extension
+  ]);
+
+  createWindow();
+
+})
