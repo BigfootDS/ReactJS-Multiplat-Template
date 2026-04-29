@@ -1,11 +1,30 @@
+import { useEffect, useState } from "react";
+
 export default function OpfscBasicDemo(){
+
+	let [customTheme, setCustomTheme] = useState("dark");
+	let [isPersisted, setIsPersisted] = useState(false);
+
+	useEffect(() => {
+		persistCheck();
+	}, []);
+
+	const persistCheck = async () => {
+		let persistedResult = await navigator.storage.persisted();
+		if (!persistedResult){
+			persistedResult = await navigator.storage.persist();
+		}
+
+		setIsPersisted(persistedResult);
+	}
+
 
 	const createFile = async () => {
 		// https://web.dev/articles/origin-private-file-system#create_new_files_and_folders
 		// https://web.dev/articles/origin-private-file-system#write_to_a_file_by_streaming
 
 		let userPrefsData = {
-			theme: "dark",
+			theme: customTheme,
 			language: "en"
 		}
 
@@ -56,6 +75,10 @@ export default function OpfscBasicDemo(){
 
 	return (
 		<div className="card opfsBasic">
+			<code>Is persisted? {isPersisted ? "TRUE" : "FALSE"} </code>
+			<br />
+			<code>Is secure context? {window.isSecureContext ? "TRUE" : "FALSE"}</code>
+			<br />
 			<button onClick={() => listAllFiles()}>
 				List All Files
 			</button>
@@ -68,6 +91,17 @@ export default function OpfscBasicDemo(){
 			<button onClick={() => deleteAllFiles()}>
 				Delete All Files
 			</button>
+			<div>
+				<h3>Customise the file contents</h3>
+				<label htmlFor="jsonTheme">Theme:</label>
+				<input 
+					type="text" 
+					name="jsonTheme"
+					id="jsonTheme" 
+					value={customTheme}
+					onChange={(event) => setCustomTheme(event.target.value)}
+				/>
+			</div>
 			<div id="fileContents"></div>
 		</div>
 	)

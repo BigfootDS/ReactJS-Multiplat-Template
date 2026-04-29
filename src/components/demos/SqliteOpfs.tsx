@@ -49,6 +49,8 @@ export default function SqliteOpfsDemo(){
 
 	return (
 		<div className="card sqliteOpfs">
+			<code>Is secure context? {window.isSecureContext ? "TRUE" : "FALSE"}</code>
+			<br />
 			<button onClick={() => createUsers()}>
 				Create a user 
 			</button>
