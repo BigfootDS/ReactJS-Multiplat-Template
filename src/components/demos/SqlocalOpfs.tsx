@@ -7,7 +7,6 @@
 // LocalStorage is synchronous, blocks the main thread, and is not accessible from web workers or service workers.
 // Should be better to try other browser APIs such as Indexed DB or 
 // even run SQLite through the browser's origin private file system, if possible.
-
 import { useEffect, useState } from "react";
 import { db } from "../../utils/database/db";
 
@@ -18,7 +17,7 @@ import { db } from "../../utils/database/db";
 // https://stackoverflow.com/a/58646390/9319097
 // https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
 
-export default function SqliteOpfsDemo(){
+export default function SqlocalOpfs(){
 
 	let [usersData, setUsersdata] = useState<object[]>();
 
@@ -49,8 +48,8 @@ export default function SqliteOpfsDemo(){
 
 	return (
 		<div className="card sqliteOpfs">
-			<code>Is secure context? {window.isSecureContext ? "TRUE" : "FALSE"}</code>
-			<br />
+			<p>You can create one hardcoded user. Attempting to create the user again will throw an error in the console, because a unique username constraint is applied to the database!</p>
+			<p>To delete the user, use the "Delete All Files" button in the other component and refresh the page. This deletes the database file, and that will get recreated when the page loads again.</p>
 			<button onClick={() => createUsers()}>
 				Create a user 
 			</button>

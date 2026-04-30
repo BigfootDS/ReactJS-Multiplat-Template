@@ -2,10 +2,10 @@
 // import viteLogo from '/electron-vite.animate.svg'
 import './App.css'
 import FsAccessDemo from './components/demos/FsAccess';
-import OpfscBasicDemo from './components/demos/OpfsBasic';
-import ReactStateDemo from './components/demos/ReactState';
-import SqliteOpfsDemo from './components/demos/SqliteOpfs';
-import StorageInfo from './components/demos/StorageInfo';
+import OpfsBasicFileIO from './components/demos/OpfsBasicFileIO';
+// import ReactStateDemo from './components/demos/ReactState';
+import SqlocalOpfs from './components/demos/SqlocalOpfs';
+import DataChecker from './components/demos/DataChecker';
 
 
 
@@ -16,11 +16,11 @@ function App() {
 
   return (
     <>
-      <StorageInfo />
-      <ReactStateDemo />
+      <DataChecker />
+      {/* <ReactStateDemo /> */}
       <FsAccessDemo />
-      <SqliteOpfsDemo />
-      <OpfscBasicDemo />
+      <SqlocalOpfs />
+      <OpfsBasicFileIO />
     </>
   )
 }

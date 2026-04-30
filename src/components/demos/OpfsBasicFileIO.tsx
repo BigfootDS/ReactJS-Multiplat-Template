@@ -1,38 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function OpfscBasicDemo(){
 
-	let [customTheme, setCustomTheme] = useState("dark");
-	let [isPersisted, setIsPersisted] = useState(false);
+export default function OpfsBasicFileIO(){
+	let [customTextContent, setCustomTextContent] = useState("Bee Movie Script goes here blah blah blah");
 
-	useEffect(() => {
-		persistCheck();
-	}, []);
-
-	const persistCheck = async () => {
-		let persistedResult = await navigator.storage.persisted();
-		if (!persistedResult){
-			persistedResult = await navigator.storage.persist();
-		}
-
-		setIsPersisted(persistedResult);
-	}
 
 
 	const createFile = async () => {
 		// https://web.dev/articles/origin-private-file-system#create_new_files_and_folders
 		// https://web.dev/articles/origin-private-file-system#write_to_a_file_by_streaming
 
-		let userPrefsData = {
-			theme: customTheme,
-			language: "en"
-		}
 
 		const opfsRoot = await navigator.storage.getDirectory();
 		console.log(opfsRoot);
-		const userPrefsFileHandle = await opfsRoot.getFileHandle("prefs.json", {create: true});
+		const userPrefsFileHandle = await opfsRoot.getFileHandle("exampleFile.txt", {create: true});
 		const userPrefsWritable = await userPrefsFileHandle.createWritable();
-		await userPrefsWritable.write(JSON.stringify(userPrefsData));
+		await userPrefsWritable.write(customTextContent);
 		await userPrefsWritable.close();
 
 	}
@@ -40,7 +23,7 @@ export default function OpfscBasicDemo(){
 	const getFile = async () => {
 		// https://web.dev/articles/origin-private-file-system#access_existing_files_and_folders
 		const opfsRoot = await navigator.storage.getDirectory();
-		const existingUserPrefsHandle = await opfsRoot.getFileHandle("prefs.json", {});
+		const existingUserPrefsHandle = await opfsRoot.getFileHandle("exampleFile.txt", {});
 		const fileData = await existingUserPrefsHandle.getFile();
 		const fileText = await fileData.text();
 		updateDisplayerDiv(fileText);		
@@ -75,15 +58,12 @@ export default function OpfscBasicDemo(){
 
 	return (
 		<div className="card opfsBasic">
-			<code>Is persisted? {isPersisted ? "TRUE" : "FALSE"} </code>
-			<br />
-			<code>Is secure context? {window.isSecureContext ? "TRUE" : "FALSE"}</code>
-			<br />
+			
 			<button onClick={() => listAllFiles()}>
 				List All Files
 			</button>
 			<button onClick={() => createFile()}>
-				Create File
+				Write File
 			</button>
 			<button onClick={() => getFile()}>
 				Read File
@@ -92,14 +72,15 @@ export default function OpfscBasicDemo(){
 				Delete All Files
 			</button>
 			<div>
-				<h3>Customise the file contents</h3>
-				<label htmlFor="jsonTheme">Theme:</label>
-				<input 
-					type="text" 
-					name="jsonTheme"
-					id="jsonTheme" 
-					value={customTheme}
-					onChange={(event) => setCustomTheme(event.target.value)}
+				<label htmlFor="customTextInput">Custom Text Content:</label>
+				<br />
+				<textarea 
+					name="customTextInput"
+					id="customTextInput" 
+					value={customTextContent}
+					onChange={(event) => setCustomTextContent(event.target.value)}
+					rows={5}
+					cols={50}
 				/>
 			</div>
 			<div id="fileContents"></div>
