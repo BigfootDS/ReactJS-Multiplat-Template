@@ -308,5 +308,23 @@ jobs:
       #       ${{ steps.output_finder.outputs.file_path }}
       #     retention-days: 30
 
+
+  alert-discord:
+    needs: [build-android, build-windows-installer, build-windows-portable, build-linux-deb, build-macos-dmg]
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: builds-storage
+          merge-multiple: true
+      - name: Display structure of downloaded files
+        run: ls -R builds-storage
+      - name: Discord Webhook Action
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          filename: builds-storage/*
+      
   # Trigger some other workflow or job once all the build jobs above are finished
   # e.g. attach all builds to a release, or push some builds to app stores, or both, blah blah blah
