@@ -38,8 +38,19 @@ export default function DataChecker(){
 		setIsStoragePersisted(persistedResult);
 	}
 
+	const getSharedWorkerFunctionality = () => {
+		try {
+			return SharedWorker ? SharedWorker.toString() : "NOT AVAILABLE";
+		} catch (error) {
+			return "NOT AVAILABLE, ERRORED OUT"
+		}
+	}
+
 	return (
 		<div className="dataChecker" style={{textAlign: "left"}}>
+			<div>
+				<h3>SharedWorker is: {getSharedWorkerFunctionality()}</h3>
+			</div>
 			<div>
 				<h3>Is Storage Persisted? {isStoragePersisted.toString().toLocaleUpperCase()}</h3>
 			</div>
