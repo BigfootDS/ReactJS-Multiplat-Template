@@ -315,16 +315,23 @@ jobs:
     environment: dev
     steps:
       - uses: actions/download-artifact@v8
+        id: download-step
         with:
           path: builds-storage
           merge-multiple: true
       - name: Display structure of downloaded files
         run: ls -R builds-storage
+      - name: Check if download-artifact outputs is anything useful
+        run: echo ${{ steps.download-step.outputs.download-path }}
       - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v7.0.0
+        uses: MineBartekSA/discord-webhook@v2
         with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          filename: builds-storage/*
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          attachment: |
+            - file: ^builds-storage\/YourAppName-Linux-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?.deb
+            - file: ^builds-storage\/YourAppName.aab
+            - file: ^builds-storage\/YourAppName-Windows-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?-Portable.exe
+            - file: ^builds-storage\/YourAppName-Windows-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?-Setup.exe
       
   # Trigger some other workflow or job once all the build jobs above are finished
   # e.g. attach all builds to a release, or push some builds to app stores, or both, blah blah blah
