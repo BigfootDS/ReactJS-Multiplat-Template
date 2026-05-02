@@ -5,6 +5,9 @@ on:
     branches:
       - "main"
 
+env: 
+  APP_NAME: YourAppName
+
 # It'll be tempting to use GitHub Actions matrix strategies to make jobs per OS/output file format,
 # but don't. 
 # Different output formats and file names and so on - gotta be handled with care, manually.
@@ -111,8 +114,8 @@ jobs:
       - name: Rename the signed release output file
         id: release_rename
         run: |
-          mv ${{ steps.sign_app.outputs.signedFile }} ./YourAppName.aab
-          renamed_output=./YourAppName.aab
+          mv ${{ steps.sign_app.outputs.signedFile }} ./${{env.APP_NAME}}.aab
+          renamed_output=./${{env.APP_NAME}}.aab
           echo "renamed_output=$renamed_output" >> "$GITHUB_OUTPUT"
           echo "file_name=$(basename "${renamed_output}")" >> "$GITHUB_OUTPUT"
 
@@ -323,15 +326,68 @@ jobs:
         run: ls -R builds-storage
       - name: Check if download-artifact outputs is anything useful
         run: echo ${{ steps.download-step.outputs.download-path }}
+
+      - name: Set the Linux DEB build file as a step output for the uploader to access
+        id: linux_deb_build_finder        
+        run: |
+          file_path=$(find . -wholename './builds-storage/${{env.APP_NAME}}-Linux-**.deb' | head -n 1)
+          file_name=$(basename "$file_path")
+          echo "file_path=$file_path" >> "$GITHUB_OUTPUT"
+          echo "file_name=$file_name" >> "$GITHUB_OUTPUT"
+          echo "file_path: $file_path"
+          echo "file_name: $file_name"
+          cat "$GITHUB_OUTPUT"
+
+      - name: Set the Android AAB build file as a step output for the uploader to access
+        id: android_aab_build_finder        
+        run: |
+          file_path=$(find . -wholename './builds-storage/${{env.APP_NAME}}.aab' | head -n 1)
+          file_name=$(basename "$file_path")
+          echo "file_path=$file_path" >> "$GITHUB_OUTPUT"
+          echo "file_name=$file_name" >> "$GITHUB_OUTPUT"
+          echo "file_path: $file_path"
+          echo "file_name: $file_name"
+          cat "$GITHUB_OUTPUT"
+
+      - name: Set the Windows Portable build file as a step output for the uploader to access
+        id: windows_portable_build_finder        
+        run: |
+          file_path=$(find . -wholename './builds-storage/${{env.APP_NAME}}-**-Portable.exe' | head -n 1)
+          file_name=$(basename "$file_path")
+          echo "file_path=$file_path" >> "$GITHUB_OUTPUT"
+          echo "file_name=$file_name" >> "$GITHUB_OUTPUT"
+          echo "file_path: $file_path"
+          echo "file_name: $file_name"
+          cat "$GITHUB_OUTPUT"
+
+      - name: Set the Windows Setup build file as a step output for the uploader to access
+        id: windows_setup_build_finder        
+        run: |
+          file_path=$(find . -wholename './builds-storage/${{env.APP_NAME}}-**-Setup.exe' | head -n 1)
+          file_name=$(basename "$file_path")
+          echo "file_path=$file_path" >> "$GITHUB_OUTPUT"
+          echo "file_name=$file_name" >> "$GITHUB_OUTPUT"
+          echo "file_path: $file_path"
+          echo "file_name: $file_name"
+          cat "$GITHUB_OUTPUT"
+
       - name: Discord Webhook Action
         uses: MineBartekSA/discord-webhook@v2
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: |
+            Files for the latest build are here! They are: 
+            - Linux (DEB): ${{ steps.linux_deb_build_finder.outputs.file_path }}
+            - Android (AAB): ${{ steps.android_aab_build_finder.outputs.file_path }}
+            - Windows (Portable): ${{ steps.windows_portable_build_finder.outputs.file_path }}
+            - Windows (Installer): ${{ steps.windows_setup_build_finder.outputs.file_path }}
+
           attachment: |
-            - file: ^builds-storage\/YourAppName-Linux-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?.deb
-            - file: ^builds-storage\/YourAppName.aab
-            - file: ^builds-storage\/YourAppName-Windows-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?-Portable.exe
-            - file: ^builds-storage\/YourAppName-Windows-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?-Setup.exe
-      
+            - file: ${{ steps.linux_deb_build_finder.outputs.file_path }}
+            - file: ${{ steps.android_aab_build_finder.outputs.file_path }}
+            - file: ${{ steps.windows_portable_build_finder.outputs.file_path }}
+            - file: ${{ steps.windows_setup_build_finder.outputs.file_path }}
+
+
   # Trigger some other workflow or job once all the build jobs above are finished
   # e.g. attach all builds to a release, or push some builds to app stores, or both, blah blah blah
