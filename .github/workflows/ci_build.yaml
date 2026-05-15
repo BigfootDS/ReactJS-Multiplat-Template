@@ -426,7 +426,7 @@ jobs:
 
       - name: Add assets to release
         run: |
-          gh release upload ${{ needs.draft-release.outputs.release_id }} ${{ steps.linux_deb_build_finder.outputs.file_path }} ${{ steps.android_aab_build_finder.outputs.file_path }} ${{ steps.windows_portable_build_finder.outputs.file_path }} ${{ steps.windows_setup_build_finder.outputs.file_path }}
+          gh release upload ${{ needs.draft-release.outputs.release_version }} ${{ steps.linux_deb_build_finder.outputs.file_path }} ${{ steps.android_aab_build_finder.outputs.file_path }} ${{ steps.windows_portable_build_finder.outputs.file_path }} ${{ steps.windows_setup_build_finder.outputs.file_path }}
 
 
       - name: Discord Webhook Action
@@ -449,7 +449,7 @@ jobs:
 
       - name: Mark release as published
         run: |
-          gh release edit ${{ needs.draft-release.outputs.release_id }} --draft=false
+          gh release edit ${{ needs.draft-release.outputs.release_version }} --draft=false
 
 
 
