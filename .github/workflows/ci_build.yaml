@@ -8,6 +8,7 @@ on:
 env: 
   APP_NAME: YourAppName
   GH_TOKEN: ${{ github.token }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 # It'll be tempting to use GitHub Actions matrix strategies to make jobs per OS/output file format,
 # but don't. 
