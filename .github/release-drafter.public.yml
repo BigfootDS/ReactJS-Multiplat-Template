@@ -1,0 +1,24 @@
+categories:
+  - title: New
+    labels:
+      - feature
+      - enhancement
+  - title: Fixed
+    labels:
+      - fix
+      - bug
+  - title: Improved
+    labels:
+      - polish
+      - ux
+
+exclude-labels:
+  - internal
+  - skip-changelog
+  - dependencies
+
+change-template: "- $TITLE"
+change-title-escapes: '\<*_&#@`'
+
+template: |
+  $CHANGES

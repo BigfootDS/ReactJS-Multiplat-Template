@@ -26,7 +26,8 @@ jobs:
       release_version: ${{ steps.tag.outputs.new_tag }}
       upload_url: ${{ steps.create-release.outputs.upload_url }}
       semver_commit_hash: ${{ steps.semver-commit.outputs.commit_hash }}
-      release_url: ${{ steps.create-release.outputs.url }}
+      release_url: ${{ steps.create-release.outputs.html_url }}
+      release_body: ${{ steps.create-release.outputs.body }}
 
     steps:
 
@@ -53,16 +54,14 @@ jobs:
       with:
         branch: main
 
-    - name: Create Release
+    - name: Create public release draft
       id: create-release
-      uses: softprops/action-gh-release@v3.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }}
+      uses: release-drafter/release-drafter@v7.3.0
       with:
-        tag_name: ${{ steps.tag.outputs.new_tag }}
-        body: ${{ steps.tag.outputs.changelog }}
-        draft: true
-        prerelease: false
+        config-name: release-drafter.public.yml
+        tag: ${{ steps.tag.outputs.new_tag }}
+        version: ${{ steps.tag.outputs.new_version }}
+        publish: false
 
   # This job is purely for sanity-checking/testing.
   # If the build fails here, no point attempting to make platform installers. 
@@ -433,19 +432,11 @@ jobs:
         uses: MineBartekSA/discord-webhook@v2
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # TODO: The content sent through this webhook should include the URL of the new release.
           content: |
-            Files for the latest build are here! They are: 
-            - Linux (DEB): ${{ steps.linux_deb_build_finder.outputs.file_path }}
-            - Android (AAB): ${{ steps.android_aab_build_finder.outputs.file_path }}
-            - Windows (Portable): ${{ steps.windows_portable_build_finder.outputs.file_path }}
-            - Windows (Installer): ${{ steps.windows_setup_build_finder.outputs.file_path }}
-            Access the release here: ${{ needs.draft-release.outputs.release_url }}
-
-          # attachment: |
-          #   - file: ${{ steps.linux_deb_build_finder.outputs.file_path }}
-          #   - file: ${{ steps.android_aab_build_finder.outputs.file_path }}
-          #   - file: ${{ steps.windows_portable_build_finder.outputs.file_path }}
-          #   - file: ${{ steps.windows_setup_build_finder.outputs.file_path }}
+            Files for the latest build are here! Access the release here: ${{ needs.draft-release.outputs.release_url }}
+            ${{ needs.draft-release.outputs.release_body }}
+          
 
       - name: Mark release as published
         run: |
