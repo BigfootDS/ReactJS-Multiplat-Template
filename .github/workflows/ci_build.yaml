@@ -14,9 +14,58 @@ env:
 # Lots of jobs to run here!
 jobs:
 
+  draft-release:
+    permissions:
+      contents: write
+    name: Create Draft Release
+    runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{ steps.create-release.outputs.id }}
+      release_version: ${{ steps.tag.outputs.new_tag }}
+      upload_url: ${{ steps.create-release.outputs.upload_url }}
+      semver_commit_hash: ${{ steps.semver-commit.outputs.commit_hash }}
+      release_url: ${{ steps.create-release.outputs.url }}
+
+    steps:
+
+    - uses: actions/checkout@v6.0.2
+      with:
+        fetch-depth: 0
+        ref: main
+    
+    - name: Bump version and push tag
+      id: tag
+      uses: mathieudutour/github-tag-action@v6.2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Bump package.json version
+      id: npm-version
+      uses: reedyuk/npm-version@master
+      with:
+        version: ${{ steps.tag.outputs.new_version }}
+
+    - name: Commit semver changes to repo
+      id: semver-commit
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        branch: main
+
+    - name: Create Release
+      id: create-release
+      uses: softprops/action-gh-release@v3.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+      with:
+        tag_name: ${{ steps.tag.outputs.new_tag }}
+        body: ${{ steps.tag.outputs.changelog }}
+        draft: true
+        prerelease: false
+
   # This job is purely for sanity-checking/testing.
   # If the build fails here, no point attempting to make platform installers. 
   build-react:
+    needs: [draft-release]
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -38,10 +87,8 @@ jobs:
       - name: Build the ReactJS app
         run: npm run react:build
 
-      
-
   build-android:
-    needs: [build-react]
+    needs: [build-react, draft-release]
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -128,7 +175,7 @@ jobs:
           retention-days: 30
 
   build-windows-installer:
-    needs: [build-react]
+    needs: [build-react, draft-release]
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
@@ -177,7 +224,7 @@ jobs:
           retention-days: 30
 
   build-windows-portable:
-    needs: [build-react]
+    needs: [build-react, draft-release]
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
@@ -227,7 +274,7 @@ jobs:
           retention-days: 30
 
   build-linux-deb:
-    needs: [build-react]
+    needs: [build-react, draft-release]
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -272,7 +319,7 @@ jobs:
           retention-days: 30
 
   build-macos-dmg:
-    needs: [build-react]
+    needs: [build-react, draft-release]
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -312,8 +359,9 @@ jobs:
       #     retention-days: 30
 
 
-  alert-discord:
-    needs: [build-android, build-windows-installer, build-windows-portable, build-linux-deb, build-macos-dmg]
+
+  publish-release-and-alert-discord:
+    needs: [build-android, build-windows-installer, build-windows-portable, build-linux-deb, build-macos-dmg, draft-release]
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -371,6 +419,11 @@ jobs:
           echo "file_name: $file_name"
           cat "$GITHUB_OUTPUT"
 
+      - name: Add assets to release
+        run: |
+          gh release upload ${{ needs.draft-release.outputs.release_id }} ${{ steps.linux_deb_build_finder.outputs.file_path }} ${{ steps.android_aab_build_finder.outputs.file_path }} ${{ steps.windows_portable_build_finder.outputs.file_path }} ${{ steps.windows_setup_build_finder.outputs.file_path }}
+
+
       - name: Discord Webhook Action
         uses: MineBartekSA/discord-webhook@v2
         with:
@@ -381,13 +434,18 @@ jobs:
             - Android (AAB): ${{ steps.android_aab_build_finder.outputs.file_path }}
             - Windows (Portable): ${{ steps.windows_portable_build_finder.outputs.file_path }}
             - Windows (Installer): ${{ steps.windows_setup_build_finder.outputs.file_path }}
+            Access the release here: ${{ needs.draft-release.outputs.release_url }}
 
-          attachment: |
-            - file: ${{ steps.linux_deb_build_finder.outputs.file_path }}
-            - file: ${{ steps.android_aab_build_finder.outputs.file_path }}
-            - file: ${{ steps.windows_portable_build_finder.outputs.file_path }}
-            - file: ${{ steps.windows_setup_build_finder.outputs.file_path }}
+          # attachment: |
+          #   - file: ${{ steps.linux_deb_build_finder.outputs.file_path }}
+          #   - file: ${{ steps.android_aab_build_finder.outputs.file_path }}
+          #   - file: ${{ steps.windows_portable_build_finder.outputs.file_path }}
+          #   - file: ${{ steps.windows_setup_build_finder.outputs.file_path }}
+
+      - name: Mark release as published
+        run: |
+          gh release edit ${{ needs.draft-release.outputs.release_id }} --draft=false
 
 
-  # Trigger some other workflow or job once all the build jobs above are finished
-  # e.g. attach all builds to a release, or push some builds to app stores, or both, blah blah blah
+
+    
