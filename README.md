@@ -30,13 +30,13 @@ Major things to do:
 - Confirm build configuration and outputs for some key platforms:
   - [ ] iOS (whatever file format is meant for them)
   - [ ] MacOS (dmg)
-  - [ ] Linux (deb)
+  - [x] Linux (deb)
 - Use this in a separate project for dogfooding to confirm how some more-complex React packages will work
   - [ ] React Router 
   - [ ] Any localstorage and indexDB solutions to avoid mobile localstorage cache auto-deleting problems
   - [ ] How/if the Capacitor plugins would work in Electron builds, and if we need to do code splitting or just limit plugin usage
 - More CI/CD
-  - [ ] Automatic GitHub repository releases with file attachments
+  - [x] Automatic GitHub repository releases with file attachments
   - [ ] Automatic publishing of releases through to app stores
 
 ## General Workflow Steps
