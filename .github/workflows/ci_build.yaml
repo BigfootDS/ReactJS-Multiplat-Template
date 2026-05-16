@@ -73,6 +73,7 @@ jobs:
   # If the build fails here, no point attempting to make platform installers. 
   build-react:
     needs: [draft-release]
+    name: Build the React App
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -96,6 +97,7 @@ jobs:
 
   build-android:
     needs: [build-react, draft-release]
+    name: Build for Android (AAB)
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -183,6 +185,7 @@ jobs:
 
   build-windows-installer:
     needs: [build-react, draft-release]
+    name: Build for Windows (Installer)
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
@@ -232,6 +235,7 @@ jobs:
 
   build-windows-portable:
     needs: [build-react, draft-release]
+    name: Build for Windows (Portable)
     runs-on: ubuntu-latest
     container: electronuserland/builder:wine
     steps:
@@ -282,6 +286,7 @@ jobs:
 
   build-linux-deb:
     needs: [build-react, draft-release]
+    name: Build for Linux (DEB)
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -327,6 +332,7 @@ jobs:
 
   build-macos-dmg:
     needs: [build-react, draft-release]
+    name: Build for MacOS (DMG)
     runs-on: ubuntu-latest
     steps:
       # Clone the repo into the action runner 
@@ -368,6 +374,7 @@ jobs:
 
 
   publish-release-and-alert-discord:
+    name: Publish the Release and Alert Discord
     needs: [build-android, build-windows-installer, build-windows-portable, build-linux-deb, build-macos-dmg, draft-release]
     runs-on: ubuntu-latest
     environment: dev
